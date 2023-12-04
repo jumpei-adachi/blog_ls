@@ -1,14 +1,22 @@
 #!ruby
 
 paths = Dir.glob('*.html')
-paths.select! {|path| path != 'blog-index.html' }
-paths.sort_by! {|path| File::Stat.new(path).ctime }
-paths.reverse!
+  .select {|path| path != 'blog-index.html' }
+  .sort_by {|path| File::Stat.new(path).ctime }
+  .reverse
 
-for path in paths do
-  data = File.open(path).read
+paths.each do |path|
+  short_file_name = path[0, 6]
+
   creation_time = File::Stat.new(path).ctime
-  title = /<title>(.*)<\/title>/.match(data)[1]
-  puts "#{creation_time}\t#{path[0, 6]}\t#{title}"
+
+  title = /<title>(.*)<\/title>/
+    .match(File.read(path))[1]
+
+  puts [
+    creation_time,
+    short_file_name,
+    title
+  ].join("\t")
 end
 
