@@ -1,5 +1,6 @@
 #!ruby
 
+# 作成日時の降順でhtmlファイルのリストを作成
 paths = Dir.glob('*.html')
   .select {|path| path != 'blog-index.html' }
   .sort_by {|path| File::Stat.new(path).ctime }
@@ -10,6 +11,7 @@ paths.each do |path|
 
   creation_time = File::Stat.new(path).ctime
 
+  # title要素のテキスト内容を正規表現を用いて取得
   title = /<title>(.*)<\/title>/
     .match(File.read(path))[1]
 
